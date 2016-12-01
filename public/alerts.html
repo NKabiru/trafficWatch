@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>traffic alerts</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+<div id="alerts-form">
+	<div>
+		<div>
+		<a href="index.html"><h1>Traffic App</h1></a>
+		<a href="signin.html">Sign In</a>
+		<span class="navbar-spacer" id="account-username">Account:  <button class="account-login" id="btnSignOut">Sign Out</button></span>
+	</div>
+	 <table id="alerts-table-form">
+	 	<thead><h3 align="center">Add alert form</h3></thead>
+	 	<tr>
+	 		<td><label for="road-title">Road Name: </label></td>
+	 		<td><input type="text" id="road-title"></td>
+	 	</tr>
+	 	<tr>
+	 		<td><label for="road-details">Details: </label></td>
+	 		<td><textarea rows="4" id="road-details"></textarea></td>
+	 	</tr>
+	 	<tr>
+	 		<td><label for="road-state">Road State: </label></td>
+	 		<td>
+				<select id="road-state">
+					<option value="clear">Clear</option>
+					<option value="congestion">Heavy congestion</option>
+					<option value="accident">Accident</option>
+					<option value="floods">Floods</option>
+					<option value="police">Police</option>
+					<option value="roadworks">Roadworks</option>
+				</select>
+	 		</td>
+	 	</tr>
+	 	<tr>
+	 		<td><label for="road-marker">Include marker?</label></td>
+	 		<td><input type="checkbox" value="addMarker" id="road-marker"></td>
+	 	</tr>
+	 	<tr>
+	 		<td><button id="add-alert">Add alert</button></td>
+	 	</tr>
+	 </table>
+</div>
+<div id="alerts-container">
+	<table id="alerts-table-results">
+		<thead><h3 align="center">Results</h3></thead>
+	</table>
+	
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o&libraries=places"></script>
+<script src="js/firedb.js" ></script>
+
+</body>
+</html>

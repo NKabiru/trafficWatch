@@ -1,0 +1,27 @@
+.navbar-spacer {
+	float: right;
+}
+
+#map {
+	position: relative;
+	height: 400px;
+	width: 100%;
+}
+
+table {
+	margin: auto;
+	border:  1px solid black;
+}
+
+#alerts-container {
+	position: fixed;
+	border-top: 1px solid black;
+	bottom: 100px;
+	left: 100px;
+	right: 100px;
+
+}
+
+.account-login {
+	visibility: hidden;
+}
