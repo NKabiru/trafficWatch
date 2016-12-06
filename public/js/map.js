@@ -8,10 +8,21 @@ var config = {
   };
   firebase.initializeApp(config);
 
-
+// Get elements
 var btnClearMarkers = document.getElementById('btnClearMarkers');
 var selectMarkerType = document.getElementById('selectMarkerType');
+var checkboxRoute = document.getElementById('routeCheckbox');
+var checkboxTraffic = document.getElementById('trafficCheckbox');
+var divLayerSelector = document.getElementById('layer-selector-control');
+var divTextDirections = document.getElementById('directions-panel');
+var inputDestination = document.getElementById('destination-input');
+var divDirectionsSelector = document.getElementById('directions-selector');
 
+var map;
+var trafficLayer;
+
+
+// Setting up the location to find the route marker icons
 var iconBase = window.location.href.toString().split(window.location.pathname)[0];
 var icon = {
 	default: {
@@ -36,18 +47,26 @@ var icon = {
 var markers = {};
 // console.log(icon);
 
+
+
 function initMap()
 {
 	var directionsDisplay = new google.maps.DirectionsRenderer;
 	var directionsService = new google.maps.DirectionsService;
+	var destinationAutocomplete = new google.maps.places.Autocomplete(inputDestination, {componentRestrictions:{country: 'KE'} });
 	
-	var map = new google.maps.Map(document.getElementById('map'),{
+	map = new google.maps.Map(document.getElementById('map'),{
 		center: {lat: 1, lng: 38},
 		zoom: 15,
+		mapTypeControl:false
 	});
 
+	divDirectionsSelector.style.opacity = 0;
 	// TODO: Add checkbox control to map to observe various layers
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(divLayerSelector);
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(divDirectionsSelector);
 
+	// Get the browser's location
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (position) {
 			var pos = {
@@ -55,28 +74,59 @@ function initMap()
 				lng: position.coords.longitude
 			};
 		map.setCenter(pos);
-		console.log(pos);
-		calculateAndDisplayRoute(directionsService, directionsDisplay, pos);
 		});
 
 	}
-	// Generate traffic layer
-	var trafficLayer = new google.maps.TrafficLayer();
-	trafficLayer.setMap(map);
+
+	// Bind routing layer to checkbox
+	checkboxRoute.addEventListener('change', function(){
+		if (checkboxRoute.checked) {
+	
+			navigator.geolocation.getCurrentPosition(function(position){
+				var pos = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+				
+				// Make destination input visible
+				inputDestination.style.visibility = 'visible';
+				divDirectionsSelector.style.opacity = 1;
+
+				// Listen for selected destination & determine route
+				destinationAutocomplete.addListener('place_changed', function(){
+					var place = destinationAutocomplete.getPlace();
+					calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
+				});
+		
+			});
+			directionsDisplay.setMap(map);
+			directionsDisplay.setPanel(divTextDirections);
+		} else {
+			// When unchecked, removes route, directions & textBox
+			inputDestination.style.visibility = 'hidden';
+			divDirectionsSelector.style.opacity = 0;
+			directionsDisplay.setMap(null);
+			directionsDisplay.setPanel(null);
+		}
+	});
+
+	// Bind traffic layer display to checkbox
+	checkboxTraffic.addEventListener('change', function(){
+	if (checkboxTraffic.checked) {
+		// Generate traffic layer which refreshes every 10 min
+		trafficLayer = new google.maps.TrafficLayer();
+		setInterval(trafficLayer.setMap(map), 600000);
+		} else {
+			trafficLayer.setMap(null);
+		}
+	});
 
 	// Generating marker based on traffic alert
-	firebaseOperation(map);
-	// Getting position from local scope
-	var userPos = {lat:map.getCenter().lat(), lng:map.getCenter().lng()};
-
-	console.log(userPos);
-	// Generate directions
-	directionsDisplay.setMap(map);
-	calculateAndDisplayRoute(directionsService, directionsDisplay, userPos);
-
-
-	
+	setInterval(firebaseOperation(map), 3600000);
+		
 }
+
+
 
 // Call the marker data from firebase
 function firebaseOperation (map){
@@ -86,14 +136,24 @@ function firebaseOperation (map){
 		snap.forEach(childSnap =>{
 			var childKey = childSnap.key;
 			var childData = childSnap.val();
+			var date = +new Date();
 
-			var marker = new google.maps.Marker({
-				map: map,
-				animation: google.maps.Animation.DROP,
-				position: childData.position,
-				icon: icon[childData.roadState].icon
-			});
+			// TODO: make marker persist for only 1 hour after creation
+			if ((childData.timestamp + 3600000) < date) {
+				console.log((childData.timestamp + 3600000) < date);
+				var marker = new google.maps.Marker({
+					map: map,
+					animation: google.maps.Animation.DROP,
+					position: childData.position,
+					icon: icon[childData.roadState].icon,
+					title: childData.roadState
+				});
 
+				setTimeout(() => {
+					marker.setMap(null);
+					delete marker;
+				}, 3600000);
+			}	
 
 		});
 
@@ -102,17 +162,17 @@ function firebaseOperation (map){
 
 }
 
-function calculateAndDisplayRoute(directionsService, directionsDisplay , position){
-	// TODO: add options for alternate routes, add placeId addresses, convert pos using toUrlValue()
-		// calculate route then
+function calculateAndDisplayRoute(directionsService, directionsDisplay , position, place){
+	// Test value: {lat:-1.284863, lng: 36.825575}
 		directionsService.route({
 			origin: position,
-			destination: {lat:-1.284863, lng: 36.825575},
-			travelMode: 'DRIVING'
-			// drivingOptions: {
-			// 	departureTime: new Date(),
-			// 	trafficModel: 'pessimistic'
-			// }
+			destination: {'placeId': place},
+			travelMode: 'DRIVING',
+			provideRouteAlternatives: true,
+			drivingOptions: {
+				departureTime: new Date(),
+				trafficModel: 'optimistic'
+			}
 		}, function(response, status){
 			if (status == 'OK') {
 				directionsDisplay.setDirections(response);

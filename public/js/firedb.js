@@ -16,7 +16,12 @@
   var addMarkerButton = document.getElementById('add-marker');
   var roadStateOptions = document.getElementById('road-state');
   var checkboxMarker = document.getElementById('road-marker');
-  var spanAccountUsername = document.getElementById('account-username');
+  var accountUsername = document.getElementById('account-username');
+  var divAlertContainer = document.getElementsByClassName('container')[0];
+  var btnCloseForm = document.getElementById('close-alertForm');
+  var sectionAlertForm = document.getElementById('hide-panel');
+  var btnShowForm = document.getElementById('show-alertform');
+
 
   // TODO: using the onAuthStateChanged listener later on
   var user;
@@ -26,11 +31,17 @@
 
 
   /*FUNCTIONS*/
+
+  // Capitalize the first Letter
+  String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  }
+
+
   // Showing the user that is logged in
   function displayUsername(name) {
-    var el = document.createElement('em');
-    el.innerText = name;
-    spanAccountUsername.insertBefore(el ,btnSignOut);
+    var el = document.createTextNode(name);
+    accountUsername.appendChild(el);
     btnSignOut.style.visibility = 'visible';
   }
 
@@ -43,7 +54,8 @@
       roadName: roadTitle,
       roadDetails: roadDetails,
       roadState: roadState,
-      timestamp: +new Date()
+      timestamp: +new Date(),
+      ".priority":  0 - +new Date()
     }; 
 
     // Get a new key for every alert
@@ -79,9 +91,8 @@
     return firebase.database().ref().update(updates);
   }
 
-
-
-    // Checks if a user is signed in 
+  /*NORMAL EXECUTION CODE*/
+  // Checks if a user is signed in 
   firebase.auth().onAuthStateChanged(firebaseUser =>{
     if (firebaseUser) {
       displayUsername(firebaseUser.displayName);
@@ -94,22 +105,53 @@
   });
   
   // Sync changes
-  firebase.database().ref().child('alerts').on('child_added', snap => {
+  firebase.database().ref('alerts').startAt().limitToLast(15).on('child_added', snap => {
 
-  	var tr = document.createElement('tr');
-  	var td = document.createElement('td');
+    var alertObject = snap.val();
+
+    // Pretty-print some of the data stored
+    var prettyRoadState = alertObject.roadState.capitalize();
+    var date = new Date(alertObject.timestamp);
+    var prettyTimestamp = ("0" + date.getDate()).slice(-2) + "/" + ("0"+(date.getMonth()+1)).slice(-2) + "/" +
+    date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+
+
+    // <div class="card-panel">
+    //   <div class="card-content">
+    //     <div class="cyan-text">Card Title<span class="right">Status</span></div>
+
+    //     <div>Lorem ipsum</div>
+
+    //     <div><span class="right">Author &emsp; 12.34pm</span></div>
+    //   </div>
+    // </div>
+
+
+    var html = 
+    '<div class="card-panel" id="alert-'+ snap.key +'">'+
+    '<div class="card-content">' +
+    '<div class="cyan-text"><b>'+ alertObject.roadName  +'</b><span class="right">&nbsp; Event: '+ prettyRoadState +'</span></div>'+
+    '<div>'+ alertObject.roadDetails +'</div>'+
+    '<div class="alert-footer"><span class="right details">'+ alertObject.author +' &emsp; '+ prettyTimestamp +'</span></div>'+
+    '</div>'+
+    '</div>';
   	
     // TODO: Fix presentation of alerts
-  	var objReturned = snap.val();
-  	td.innerHTML = "<b>" + objReturned.road + ":</b> " + objReturned.details ;
-
-  	alertsTable.appendChild(tr);
-  	tr.appendChild(td);
+  	divAlertContainer.insertAdjacentHTML('beforeend', html);
 
   });
 
+  btnShowForm.addEventListener('click', () => {
+    sectionAlertForm.style.display = 'block';
+  });
+
+  // If close icon clicked, set display to none.
+  btnCloseForm.addEventListener('click', () => {
+    sectionAlertForm.style.display = 'none';
+  });
+
   // Add firebase reference, if checkbox is true, save alerts details as marker arguments also
-  addAlertButton.addEventListener('click', snap => {
+  addAlertButton.addEventListener('click', () => {
     if (checkboxMarker.checked) {
       writeNewAlert(user.uid, user.displayName, roadNameInput.value, roadDetailsInput.value, roadStateOptions.value);
 
@@ -121,7 +163,9 @@
       writeNewMarker(user.uid, user.displayName, roadNameInput.value, roadDetailsInput.value, roadStateOptions.value, placeLatLng);
     } else {
       writeNewAlert(user.uid, user.displayName, roadNameInput.value, roadDetailsInput.value, roadStateOptions.value);
+
     }
+    sectionAlertForm.style.display = 'none';
     roadNameInput.value = "";
     roadDetailsInput.value = "";
   });

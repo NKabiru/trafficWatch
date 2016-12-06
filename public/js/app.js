@@ -14,7 +14,7 @@
   var inputPassword = document.getElementById('password');
   var btnSignUp = document.getElementById('btnSignUp');
   
-  var spanAccountUsername = document.getElementById('account-username');
+  var accountUsername = document.getElementById('account-username');
 
   // Elements of sign-in page
   var btnSignOut = document.getElementById('btnSignOut');
@@ -22,41 +22,35 @@
   var signInEmail = document.getElementById('signin-email');
   var signInPassword = document.getElementById('signin-password');
 
-  // Global variable to store username
+  // Global variables
   var username;
+  var signInClicked = false;
 
-  // Choosing which pages load which functions
-  switch(document.location.pathname) {
-    case '/index.html':
-      break;
-    case '/signin.html':
-      signInUser();
-      break;
-    case '/signup.html':
-      signUpUser();
-      var user = function (){
-        writeUserData(currentUID, username, firebaseUser.email);
-        firebaseUser.updateProfile({
-        displayName: username
-      });
-      }
-      break;
-
-  }
-
-  // Adding users to firebase
-  // var userRefObj = firebase.database().ref().child('users');
-  // userRefObj.on()
-
+ 
 
   // Add user to database
   function writeUserData (userId, name, email) {
     firebase.database().ref('users/' + userId).set({
       username: name,
       email : email,
+      isAdmin: false
     });
   }
 
+  // Signing-in users
+  function signInUser () {
+      btnSignIn.addEventListener('click', function(){
+      var loginEmail = signInEmail.value;
+      var loginPass =  signInPassword.value;
+      firebase.auth().signInWithEmailAndPassword(loginEmail, loginPass).catch(e =>window.alert(e.message));
+      // Clear sign-in form values
+      signInPassword.value = "";
+      signInEmail.value = "";
+      signInClicked = true;
+    });
+  }
+
+  // Signing up new users
   function signUpUser () {  
     // Bind sign-up event
     btnSignUp.addEventListener('click', e => {
@@ -64,12 +58,8 @@
       var pass = inputPassword.value;
       username = inputUsername.value;
       var promise = firebase.auth().createUserWithEmailAndPassword(email, pass);
-      promise.catch(e => console.log(e.code +":"+ e.message));
+      promise.catch(e => window.alert(e.message));
 
-      writeUserData(currentUID, username, firebaseUser.email);
-      firebaseUser.updateProfile({
-        displayName: username
-      });
       // Clear sign-up form values
       inputUsername.value = "";
       inputEmail.value = "";
@@ -77,32 +67,29 @@
     });
   }
 
-  function signInUser () {
-      btnSignIn.addEventListener('click', function(){
-      var loginEmail = signInEmail.value;
-      var loginPass =  signInPassword.value;
-      firebase.auth().signInWithEmailAndPassword(loginEmail, loginPass).catch(e =>{
-        console.log(e.code +":"+ e.message);
-        signInPassword.value = "";
-        signInEmail.value = "";
-      });
-    });
-  }
-
   function displayUsername(name) {
-    var el = document.createElement('em');
-    el.innerText = name;
-    spanAccountUsername.insertBefore(el ,btnSignOut);
+    var el = document.createTextNode(name);
+    accountUsername.appendChild(el);
+    btnSignOut.style.visibility = 'visible';
   }
 
   var currentUID;
 
-  // Add listener
+  // Listen to the authentication state
   firebase.auth().onAuthStateChanged(firebaseUser => {
     if(firebaseUser) {
-      currentUID = firebaseUser.uid;
-      displayUsername(firebaseUser.displayName);
-      btnSignOut.style.visibility = "visible";
+      currentUID = firebaseUser.uid;      
+      firebaseUser.updateProfile({displayName: username});
+
+      // Check if the sign-in button was clicked. If not, it assumes the sign-up button was clicked.
+      if(signInClicked != true){
+        writeUserData(currentUID, username, firebaseUser.email);
+        displayUsername(username);
+      } else {
+        displayUsername(firebaseUser.displayName);
+        window.location = 'index.html';
+      }
+
       console.log(firebaseUser);
     } else {
       console.log('not logged in');
@@ -110,11 +97,16 @@
     }
   });
 
+  // Choosing which pages load which functions
+  switch(document.location.pathname) {
+    case '/signin.html':
+      signInUser();
+      break;
+    case '/signup.html':
+      signUpUser();
+      break;
 
-
-
-  // TODO: Binding buttons
-
+  }
 
     // Bind sign-out event
     btnSignOut.addEventListener('click', function(){

@@ -1,34 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Sign in</title>
-<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/materialize.css">
 <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+
+<title>Sign in</title>
 </head>
-<body>
-	<div>
-		<a href="index.html"><h1>Traffic App</h1></a>
-		<span class="navbar-spacer" id="account-username">Account:
-		<button class="account-login" id="btnSignOut">Sign Out</button>
-		</span>
+<body class="cyan lighten-4">
+	<nav class="cyan">
+	<div class="nav-wrapper container">
+		<a href="index.html" class="brand-logo">Traffic App</a>
+		<ul id="nav-mobile" class="right">
+			<li id="account-username">Account:&nbsp;</li>
+			<li class="navbar-spacer"><button class="btn-flat white-text" id="btnSignOut">Sign Out</button></li>
+		</ul>		
+	</div>
+	</nav>
+
+	
+	<div class="container" id="sign-in-page">
+	  <div class="row">
+		<div class="col s8 offset-s2 valign" >
+		<div class="card-panel">
+		 <div class="card-content">
+			<div><h5>Sign In</h5></div>
+
+			<div class="input-field">
+				<label for="signin-email">Email</label>
+			    <input type="email" id="signin-email"  class="validate">
+		    </div>
+
+		    <div class="input-field">
+			    <label for="signin-password">Password</label>
+			    <input type="password" id="signin-password"  class="validate">
+		    </div>
+		
+		    <div>
+		    <button id="btnSignIn" class="waves-effect waves-light btn cyan">Sign In</button>
+		    </div>
+
+		</div> 	   	    	
+	   </div>
+	  </div>
+	 </div>	
 	</div>
 
-	<div class="container" id="sign-in-page">
-		<table>
-		    <tr>
-		    <td><label for="signin-email">Email:</label></td>
-		    <td><input type="email" id="signin-email" placeholder="Email"></td>
-		    </tr>
-		    <tr>
-		    <td><label for="signin-password">Password:</label></td>
-		    <td><input type="password" id="signin-password" placeholder="Password"></td>
-		    </tr>
-		    <tr>
-		    <td><button id="btnSignIn">Sign In</button></td>
-		    <td></td>
-		    </tr>    
-  		</table>
-	</div>
+<script src="js/materialize.js"></script>
+<script src="js/auth.js"></script>	
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,27 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/materialize.css">
 <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+
 	<title>Home</title>
 </head>
-<body>
-	<div id="navigation-bar" class="forms">
-		<h1>Traffic App</h1> <br/>
-		<a href="alerts.html">Traffic Alerts</a>
-		<span class="navbar-spacer">
-			<a class="account" href="signin.html">Sign In</a>
-			<a class="account" href="signup.html">Sign Up</a>
-		</span>
-		
-	</div>	
+<body class="cyan lighten-4">
+	<!-- Navigation bar -->
+	<nav>
+	<div id="navigation-bar" class="nav-wrapper cyan">
+		<a href="#" class="brand-logo">Traffic App</a>
+		<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>		
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="alerts.html">Traffic Alerts</a></li>
+			<li><a class="account" href="signin.html">Sign In</a></li>
+			<li><a class="account" href="signup.html">Sign Up</a></li>
+			<li id="account-username">Account:&nbsp;</li>
+			<li><button class="btn-flat white-text" id="btnSignOut">Sign Out</button></li>
+		</ul>
+		<ul id="mobile-demo" class="side-nav">
+			<li id="account-username" class="cyan-text">Account:&nbsp;</li>
+			<li><a href="alerts.html">Traffic Alerts</a></li>
+			<li><a class="account" href="signin.html">Sign In</a></li>
+			<li><a class="account" href="signup.html">Sign Up</a></li>
+			<li><button class="waves-effect waves-light btn-flat cyan-text" id="btnSignOut">Sign Out</button></li>
+		</ul>		
+	</div>
+	</nav>
 
-	<div id="map">
-		<script src="js/map.js"></script>
+	<!-- Map controls div -->
+	<div id="layer-selector-control" class="map-control">
+		<input type="checkbox" value="routeChecked" id="routeCheckbox">
+		<label for="routeCheckbox">Show Route</label>
+		<input type="checkbox" value="trafficChecked" id="trafficCheckbox">
+		<label for="trafficCheckbox" class="text-black">Show traffic</label>
 	</div>
 
-	
+	<div id="directions-selector" class="map-control">
+		<input id="destination-input" type="text" placeholder="Enter destination">
+	</div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o&libraries=places&callback=initMap" async defer></script>	
+	<!-- Map space -->	
+	<div id="map"></div>
+
+	<!-- Align directions with other panels -->
+	<div>
+		<div class="row">
+			<div class="col s6">
+				<div class="card large">
+					<div class="card-title cyan-text center-align">Text Directions</div>
+					<div id="directions-panel"></div>
+				</div>
+			</div>
+			<div class="col s6">
+				<div class="card large">
+					<div class="card-title cyan-text center-align">Roads to Avoid</div>
+					<div class="card-content" id="roads">
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+
+	<script>
+		$( document ).ready(function(){
+			  $(".button-collapse").sideNav();
+		})
+	</script>
+
+<script src="js/materialize.js"></script>
+<script src="js/map.js"></script>
+<script src="js/query.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o&libraries=places&callback=initMap" async defer></script>
+<script src="js/auth.js"></script>	
 </body>
 </html>

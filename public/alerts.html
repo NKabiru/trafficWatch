@@ -1,31 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>traffic alerts</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
+
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/materialize.css">
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+
+<title>Traffic alerts</title>
+
 </head>
 <body>
-<div id="alerts-form">
-	<div>
-		<div>
-		<a href="index.html"><h1>Traffic App</h1></a>
-		<a href="signin.html">Sign In</a>
-		<span class="navbar-spacer" id="account-username">Account:  <button class="account-login" id="btnSignOut">Sign Out</button></span>
+
+<div>
+	<nav>
+	<div class="nav-wrapper cyan">
+		<a href="index.html" class="brand-logo">Traffic App</a>
+		<ul id="nav-mobile" class="right">
+			<li id="account-username">Account:&nbsp;</li>
+			<li class="navbar-spacer"><button class="btn-flat white-text" id="btnSignOut">Sign Out</button></li>
+		</ul>
 	</div>
-	 <table id="alerts-table-form">
-	 	<thead><h3 align="center">Add alert form</h3></thead>
-	 	<tr>
-	 		<td><label for="road-title">Road Name: </label></td>
-	 		<td><input type="text" id="road-title"></td>
-	 	</tr>
-	 	<tr>
-	 		<td><label for="road-details">Details: </label></td>
-	 		<td><textarea rows="4" id="road-details"></textarea></td>
-	 	</tr>
-	 	<tr>
-	 		<td><label for="road-state">Road State: </label></td>
-	 		<td>
-				<select id="road-state">
+	</nav>
+
+
+	<div class="container">
+	  <div class="row ">
+		<div class="col s10 offset-s1 valign" >
+
+			<div align="center">		
+	 			<button class="waves-effect waves-light btn-flat cyan-text" id="show-alertform"><i class="material-icons right">edit</i>Add alert</button>
+			</div>
+
+		<section id="hide-panel" style="display: none">
+		<div class="card-panel">
+		 <div class="card-content">
+			<div><h5>Add alert<button class="small btn-flat right" id="close-alertForm"><i class="small material-icons">close</i></button></h5></div>
+
+			<div class="input-field">
+				<label for="road-title">Road Name: </label>
+			    <input type="text" id="road-title">
+		    </div>
+
+		    <div class="input-field">
+			    <label for="road-details">Details: </label>
+			    <textarea class="materialize-textarea" id="road-details"></textarea>
+		    </div>
+
+		    <div class="input-field">  
+			    <select id="road-state">
 					<option value="clear">Clear</option>
 					<option value="congestion">Heavy congestion</option>
 					<option value="accident">Accident</option>
@@ -33,25 +60,32 @@
 					<option value="police">Police</option>
 					<option value="roadworks">Roadworks</option>
 				</select>
-	 		</td>
-	 	</tr>
-	 	<tr>
-	 		<td><label for="road-marker">Include marker?</label></td>
-	 		<td><input type="checkbox" value="addMarker" id="road-marker"></td>
-	 	</tr>
-	 	<tr>
-	 		<td><button id="add-alert">Add alert</button></td>
-	 	</tr>
-	 </table>
-</div>
-<div id="alerts-container">
-	<table id="alerts-table-results">
-		<thead><h3 align="center">Results</h3></thead>
-	</table>
-	
-</div>
+				<label for="road-state">Road State: </label>
+		    </div>
 
-<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+		    <div class="input-field">  
+			    <input type="checkbox" value="addMarker" id="road-marker" class="filled-in">
+			    <label for="road-marker">Include marker?</label>
+		    </div>
+		
+		    <div class="input-field">
+		    	<button id="add-alert" class="waves-effect waves-light btn cyan">Add Alert</button>
+		    </div>
+		</div> 	   	    	
+	   </div>
+	   </section>
+
+	  </div>
+	 </div>	
+
+
+<script>
+	$(document).ready(function(){
+		$('select').material_select();
+	});
+</script>
+
+<script src="js/materialize.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o&libraries=places"></script>
 <script src="js/firedb.js" ></script>
 
