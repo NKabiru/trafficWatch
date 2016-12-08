@@ -4,11 +4,13 @@ var userID;
 var btnSignOut = document.getElementById('btnSignOut');
 var accountUsername = document.getElementById('account-username');
 var accountStuff = document.getElementsByClassName('account');
+var mobileBtnSignOut = document.getElementById('mobile-btnSignOut');
+var mobileAccountUsername = document.getElementById('mobile-account-username');
 
 // Make sign up and sign in disappear
 function accountDetails(){
   for(var i = 0; i < accountStuff.length; i++){
-    accountStuff[i].style.visibility = 'hidden';
+    accountStuff[i].style.display = 'none';
   }
 }
 
@@ -16,7 +18,9 @@ function accountDetails(){
 function displayUsername(name) {
   var el = document.createTextNode(name);
   accountUsername.appendChild(el);
-  btnSignOut.style.visibility = 'visible';
+  mobileAccountUsername.appendChild(el);
+  mobileBtnSignOut.style.display = 'initial';
+  btnSignOut.style.display = 'initial';
 }
 
 // Listen for changes in authentication state
@@ -28,10 +32,23 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
       console.log(firebaseUser);
     } else {
       console.log('not logged in');
-      btnSignOut.style.visibility = 'hidden';
-      document.getElementById('account-username').style.visibility = 'hidden';
+      btnSignOut.style.display = 'none';
+      mobileBtnSignOut.style.display = 'none';
+      mobileAccountUsername.style.display = 'none';
+      accountUsername.style.display= 'none';
     }
   });
+
+mobileBtnSignOut.addEventListener('click', function(){
+  firebase.auth().signOut().then( function(){
+    // Successful signout
+    console.log('Logout Successful');
+    window.location = 'index.html';
+  }, function(error){
+    // Unsuccessful signout
+    console.log(error.code +":"+ error.message);
+  });
+});
 
     // Bind sign-out event
 btnSignOut.addEventListener('click', function(){
@@ -44,3 +61,4 @@ btnSignOut.addEventListener('click', function(){
     console.log(error.code +":"+ error.message);
   });
 });
+

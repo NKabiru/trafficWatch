@@ -42,7 +42,7 @@
   function displayUsername(name) {
     var el = document.createTextNode(name);
     accountUsername.appendChild(el);
-    btnSignOut.style.visibility = 'visible';
+    btnSignOut.style.display = 'initial';
   }
 
   // Adding new alert to db
@@ -98,14 +98,13 @@
       displayUsername(firebaseUser.displayName);
       user = firebaseUser;
     } else {
-      var el = document.createElement('em');
-      el.innerText = 'Not signed in';
-      spanAccountUsername.insertBefore(el, btnSignOut);
+      btnSignOut.style.display = 'none';
+      accountUsername.style.display = 'none';
     }
   });
   
   // Sync changes
-  firebase.database().ref('alerts').startAt().limitToLast(15).on('child_added', snap => {
+  firebase.database().ref('alerts').startAt().limitToFirst(15).on('child_added', snap => {
 
     var alertObject = snap.val();
 
@@ -165,6 +164,7 @@
       writeNewAlert(user.uid, user.displayName, roadNameInput.value, roadDetailsInput.value, roadStateOptions.value);
 
     }
+    location.reload();
     sectionAlertForm.style.display = 'none';
     roadNameInput.value = "";
     roadDetailsInput.value = "";

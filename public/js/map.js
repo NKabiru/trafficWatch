@@ -25,9 +25,6 @@ var trafficLayer;
 // Setting up the location to find the route marker icons
 var iconBase = window.location.href.toString().split(window.location.pathname)[0];
 var icon = {
-	default: {
-		icon: null
-	},
 	congestion: {
 		icon: iconBase + "/images/congestionMarker.png"
 	},
@@ -53,7 +50,7 @@ function initMap()
 {
 	var directionsDisplay = new google.maps.DirectionsRenderer;
 	var directionsService = new google.maps.DirectionsService;
-	var destinationAutocomplete = new google.maps.places.Autocomplete(inputDestination, {componentRestrictions:{country: 'KE'} });
+	// var destinationAutocomplete = new google.maps.places.Autocomplete(inputDestination, {componentRestrictions:{country: 'KE'} });
 	
 	map = new google.maps.Map(document.getElementById('map'),{
 		center: {lat: 1, lng: 38},
@@ -61,10 +58,10 @@ function initMap()
 		mapTypeControl:false
 	});
 
-	divDirectionsSelector.style.opacity = 0;
+	// divDirectionsSelector.style.opacity = 0;
 	// TODO: Add checkbox control to map to observe various layers
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(divLayerSelector);
-	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(divDirectionsSelector);
+	// map.controls[google.maps.ControlPosition.TOP_RIGHT].push(divDirectionsSelector);
 
 	// Get the browser's location
 	if (navigator.geolocation) {
@@ -74,41 +71,42 @@ function initMap()
 				lng: position.coords.longitude
 			};
 		map.setCenter(pos);
+		console.log(pos);
 		});
 
 	}
 
 	// Bind routing layer to checkbox
-	checkboxRoute.addEventListener('change', function(){
-		if (checkboxRoute.checked) {
 	
-			navigator.geolocation.getCurrentPosition(function(position){
-				var pos = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude
-				};
-				
-				// Make destination input visible
-				inputDestination.style.visibility = 'visible';
-				divDirectionsSelector.style.opacity = 1;
-
-				// Listen for selected destination & determine route
-				destinationAutocomplete.addListener('place_changed', function(){
-					var place = destinationAutocomplete.getPlace();
-					calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
-				});
 		
-			});
+	
+			// navigator.geolocation.getCurrentPosition(function(position){
+			// 	var pos = {
+			// 		lat: position.coords.latitude,
+			// 		lng: position.coords.longitude
+			// 	};
+				
+			// 	// Make destination input visible
+			// 	// inputDestination.style.visibility = 'visible';
+			// 	// divDirectionsSelector.style.opacity = 1;
+
+			// 	// Listen for selected destination & determine route
+			// 	// destinationAutocomplete.addListener('place_changed', function(){
+			// 	// 	var place = destinationAutocomplete.getPlace();
+			// 	// 	calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
+			// 	// });
+		
+			// });
 			directionsDisplay.setMap(map);
 			directionsDisplay.setPanel(divTextDirections);
-		} else {
-			// When unchecked, removes route, directions & textBox
-			inputDestination.style.visibility = 'hidden';
-			divDirectionsSelector.style.opacity = 0;
-			directionsDisplay.setMap(null);
-			directionsDisplay.setPanel(null);
-		}
-	});
+		
+			// // When unchecked, removes route, directions & textBox
+			// inputDestination.style.visibility = 'hidden';
+			// // divDirectionsSelector.style.opacity = 0;
+			// directionsDisplay.setMap(null);
+			// directionsDisplay.setPanel(null);
+		
+	
 
 	// Bind traffic layer display to checkbox
 	checkboxTraffic.addEventListener('change', function(){
@@ -139,21 +137,24 @@ function firebaseOperation (map){
 			var date = +new Date();
 
 			// TODO: make marker persist for only 1 hour after creation
-			if ((childData.timestamp + 3600000) < date) {
-				console.log((childData.timestamp + 3600000) < date);
-				var marker = new google.maps.Marker({
-					map: map,
-					animation: google.maps.Animation.DROP,
-					position: childData.position,
-					icon: icon[childData.roadState].icon,
-					title: childData.roadState
-				});
+			if (childData.roadState == 'clear') {
+				return;
 
-				setTimeout(() => {
-					marker.setMap(null);
-					delete marker;
-				}, 3600000);
-			}	
+				}else if ((childData.timestamp + 3600000) >= date) {
+					console.log((childData.timestamp + 3600000) < date);
+					var marker = new google.maps.Marker({
+						map: map,
+						animation: google.maps.Animation.DROP,
+						position: childData.position,
+						icon: icon[childData.roadState].icon,
+						title: childData.roadState
+					});
+
+					// setTimeout(() => {
+					// 	marker.setMap(null);
+					// 	delete marker;
+					// }, 3600000);
+				}	
 
 		});
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/materialize.css">
 <link rel="stylesheet" type="text/css" href="css/styles.css">
 
@@ -12,12 +12,13 @@
 
 	<title>Home</title>
 </head>
-<body class="cyan lighten-4">
+<body>
 	<!-- Navigation bar -->
 	<nav>
 	<div id="navigation-bar" class="nav-wrapper cyan">
 		<a href="#" class="brand-logo">Traffic App</a>
-		<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>		
+		<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>	
+			
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			<li><a href="alerts.html">Traffic Alerts</a></li>
 			<li><a class="account" href="signin.html">Sign In</a></li>
@@ -26,32 +27,35 @@
 			<li><button class="btn-flat white-text" id="btnSignOut">Sign Out</button></li>
 		</ul>
 		<ul id="mobile-demo" class="side-nav">
-			<li id="account-username" class="cyan-text">Account:&nbsp;</li>
+			<li id="mobile-account-username" class="cyan-text">Account:&nbsp;</li>
+			<li><button class="waves-effect waves-light btn-flat cyan-text" id="mobile-btnSignOut">Sign Out</button></li>
+			<li><div class="divider"></div></li>
 			<li><a href="alerts.html">Traffic Alerts</a></li>
 			<li><a class="account" href="signin.html">Sign In</a></li>
-			<li><a class="account" href="signup.html">Sign Up</a></li>
-			<li><button class="waves-effect waves-light btn-flat cyan-text" id="btnSignOut">Sign Out</button></li>
+			<li><a class="account" href="signup.html">Sign Up</a></li>		
 		</ul>		
 	</div>
 	</nav>
 
 	<!-- Map controls div -->
 	<div id="layer-selector-control" class="map-control">
-		<input type="checkbox" value="routeChecked" id="routeCheckbox">
-		<label for="routeCheckbox">Show Route</label>
+		<!-- <input type="checkbox" value="routeChecked" id="routeCheckbox">
+		<label for="routeCheckbox">Show Route</label> -->
 		<input type="checkbox" value="trafficChecked" id="trafficCheckbox">
 		<label for="trafficCheckbox" class="text-black">Show traffic</label>
 	</div>
 
-	<div id="directions-selector" class="map-control">
+	<!-- <div id="directions-selector" class="map-control">
 		<input id="destination-input" type="text" placeholder="Enter destination">
 	</div>
-
+ -->
 	<!-- Map space -->	
-	<div id="map"></div>
+		<div class="map-container"><div id="map"></div></div>
+		
+	
 
 	<!-- Align directions with other panels -->
-	<div>
+<!-- 	<div>
 		<div class="row">
 			<div class="col s6">
 				<div class="card large">
@@ -69,7 +73,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 		
 
 	<script>
@@ -80,7 +84,6 @@
 
 <script src="js/materialize.js"></script>
 <script src="js/map.js"></script>
-<script src="js/query.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o&libraries=places&callback=initMap" async defer></script>
 <script src="js/auth.js"></script>	
 </body>
