@@ -16,9 +16,9 @@ function accountDetails(){
 
 // Showing the user that is logged in
 function displayUsername(name) {
-  var el = document.createTextNode(name);
-  accountUsername.appendChild(el);
+  var el = document.createTextNode(name);  
   mobileAccountUsername.appendChild(el);
+  accountUsername.appendChild(el.cloneNode(true));
   mobileBtnSignOut.style.display = 'initial';
   btnSignOut.style.display = 'initial';
 }

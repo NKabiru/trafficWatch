@@ -22,6 +22,9 @@
   var sectionAlertForm = document.getElementById('hide-panel');
   var btnShowForm = document.getElementById('show-alertform');
 
+  var mobileBtnSignOut = document.getElementById('mobile-btnSignOut');
+  var mobileAccountUsername = document.getElementById('mobile-account-username');
+
 
   // TODO: using the onAuthStateChanged listener later on
   var user;
@@ -42,7 +45,9 @@
   function displayUsername(name) {
     var el = document.createTextNode(name);
     accountUsername.appendChild(el);
+    mobileAccountUsername.appendChild(el.cloneNode(true));
     btnSignOut.style.display = 'initial';
+    mobileBtnSignOut.style.display = 'initial';
   }
 
   // Adding new alert to db
@@ -98,6 +103,8 @@
       displayUsername(firebaseUser.displayName);
       user = firebaseUser;
     } else {
+      mobileBtnSignOut.style.display = 'none';
+      mobileAccountUsername.style.display = 'none';
       btnSignOut.style.display = 'none';
       accountUsername.style.display = 'none';
     }
@@ -171,6 +178,17 @@
   });
 
   // Sign out current user
+  mobileBtnSignOut.addEventListener('click', function(){
+  firebase.auth().signOut().then( function(){
+    // Successful signout
+    console.log('Logout Successful');
+    window.location = 'index.html';
+  }, function(error){
+    // Unsuccessful signout
+    console.log(error.code +":"+ error.message);
+  });
+});
+
   btnSignOut.addEventListener('click', function(){
   firebase.auth().signOut().then( function(){
     // Successful signout
