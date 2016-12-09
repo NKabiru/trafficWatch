@@ -21,6 +21,7 @@
 			
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			<li><a href="alerts.html">Traffic Alerts</a></li>
+			<li><a href="dashboard.html">Dashboard</a></li>
 			<li><a class="account" href="signin.html">Sign In</a></li>
 			<li><a class="account" href="signup.html">Sign Up</a></li>
 			<li id="account-username">Account:&nbsp;</li>
@@ -31,6 +32,7 @@
 			<li><button class="waves-effect waves-light btn-flat cyan-text" id="mobile-btnSignOut">Sign Out</button></li>
 			<li><div class="divider"></div></li>
 			<li><a href="alerts.html">Traffic Alerts</a></li>
+			<li><a href="dashboard.html">Dashboard</a></li>
 			<li><a class="account" href="signin.html">Sign In</a></li>
 			<li><a class="account" href="signup.html">Sign Up</a></li>		
 		</ul>		
@@ -39,21 +41,28 @@
 
 	<!-- Map controls div -->
 	<div id="layer-selector-control" class="map-control">
-		<!-- <input type="checkbox" value="routeChecked" id="routeCheckbox">
-		<label for="routeCheckbox">Show Route</label> -->
 		<input type="checkbox" value="trafficChecked" id="trafficCheckbox">
 		<label for="trafficCheckbox" class="text-black">Show traffic</label>
 	</div>
 
-	<!-- <div id="directions-selector" class="map-control">
+	<div id="directions-selector">
 		<input id="destination-input" type="text" placeholder="Enter destination">
 	</div>
- -->
+
 	<!-- Map space -->	
-		<div class="map-container"><div id="map"></div></div>
+		<div class="map-container">
+			<div id="map"></div>
+			<ul id="directions-slide" class="side-nav">
+				<li><div class="directions-panel"></div></li>
+			</ul>
+		</div>
 		
 	
-
+	<div id="show-directions-control">
+		<a id="btnDirections" class="btn-floating btn-large waves-effect waves-light white" data-activates="directions-slide">
+			<i class="material-icons md-dark">directions</i>
+		</a>	
+	</div>	
 	<!-- Align directions with other panels -->
 <!-- 	<div>
 		<div class="row">
@@ -76,11 +85,6 @@
 	</div> -->
 		
 
-	<script>
-		$( document ).ready(function(){
-			  $(".button-collapse").sideNav();
-		})
-	</script>
 
 <script src="js/materialize.js"></script>
 <script src="js/map.js"></script>

@@ -8,6 +8,9 @@ var config = {
   };
   firebase.initializeApp(config);
 
+// Add side-nav to mobile screens
+ $(".button-collapse").sideNav();
+
 // Get elements
 var btnClearMarkers = document.getElementById('btnClearMarkers');
 var selectMarkerType = document.getElementById('selectMarkerType');
@@ -17,6 +20,8 @@ var divLayerSelector = document.getElementById('layer-selector-control');
 var divTextDirections = document.getElementById('directions-panel');
 var inputDestination = document.getElementById('destination-input');
 var divDirectionsSelector = document.getElementById('directions-selector');
+var divDirectionsButton = document.getElementById('show-directions-control');
+var btnShowDirections = document.getElementById('btnDirections');
 
 var map;
 var trafficLayer;
@@ -50,7 +55,7 @@ function initMap()
 {
 	var directionsDisplay = new google.maps.DirectionsRenderer;
 	var directionsService = new google.maps.DirectionsService;
-	// var destinationAutocomplete = new google.maps.places.Autocomplete(inputDestination, {componentRestrictions:{country: 'KE'} });
+	var destinationAutocomplete = new google.maps.places.Autocomplete(inputDestination, {componentRestrictions:{country: 'KE'} });
 	
 	map = new google.maps.Map(document.getElementById('map'),{
 		center: {lat: 1, lng: 38},
@@ -61,7 +66,8 @@ function initMap()
 	// divDirectionsSelector.style.opacity = 0;
 	// TODO: Add checkbox control to map to observe various layers
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(divLayerSelector);
-	// map.controls[google.maps.ControlPosition.TOP_RIGHT].push(divDirectionsSelector);
+	map.controls[google.maps.ControlPosition.TOP_CENTER].push(divDirectionsSelector);
+	map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(divDirectionsButton);
 
 	// Get the browser's location
 	if (navigator.geolocation) {
@@ -72,7 +78,7 @@ function initMap()
 			};
 		map.setCenter(pos);
 		console.log(pos);
-		});
+		}, e => console.log("Position unavailable."), {enableHighAccuracy: true});
 
 	}
 
@@ -80,25 +86,28 @@ function initMap()
 	
 		
 	
-			// navigator.geolocation.getCurrentPosition(function(position){
-			// 	var pos = {
-			// 		lat: position.coords.latitude,
-			// 		lng: position.coords.longitude
-			// 	};
-				
-			// 	// Make destination input visible
-			// 	// inputDestination.style.visibility = 'visible';
-			// 	// divDirectionsSelector.style.opacity = 1;
-
-			// 	// Listen for selected destination & determine route
-			// 	// destinationAutocomplete.addListener('place_changed', function(){
-			// 	// 	var place = destinationAutocomplete.getPlace();
-			// 	// 	calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
-			// 	// });
+	navigator.geolocation.getCurrentPosition(function(position){
+		var pos = {
+			lat: position.coords.latitude,
+			lng: position.coords.longitude
+		};
 		
-			// });
-			directionsDisplay.setMap(map);
+		// Make destination input visible
+		
+
+		// Listen for selected destination & determine route
+		destinationAutocomplete.addListener('place_changed', function(){
+			var place = destinationAutocomplete.getPlace();
+			calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
+		});
+
+	});
+		directionsDisplay.setMap(map);
+
+		btnShowDirections.addEventListener('click', () => {
+			$('#btnDirections').sideNav('show');
 			directionsDisplay.setPanel(divTextDirections);
+		});
 		
 			// // When unchecked, removes route, directions & textBox
 			// inputDestination.style.visibility = 'hidden';

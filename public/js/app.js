@@ -37,10 +37,8 @@
 
   }
 
-
   // Add user to database
   function writeUserData (userId, name, email) {
-    console.log("id:"+userId + " username:" +name+ " email:" + email);
     firebase.database().ref('users/' + userId).set({
       username: name,
       email : email,
@@ -71,19 +69,20 @@
       username = inputUsername.value;
       var promise = firebase.auth().createUserWithEmailAndPassword(email, pass);
 
-      promise.then(() => {
+      promise.then(() =>{
+        // Get current user & update username
         user = firebase.auth().currentUser;
-      }).then(() =>{
-        user.updateProfile({displayName: username});
-        console.log(user);
-        writeUserData(user.uid, user.displayName, user.email);
-      }).catch(e => window.alert(e.message));
+        
+        
+      }).then(() => {
+        // Clear sign-up form values
+        inputUsername.value = "";
+        inputEmail.value = "";
+        inputPassword.value = "";
+        signInClicked = false;
+      }).catch(e => console.log(e.message));
 
-      // Clear sign-up form values
-      inputUsername.value = "";
-      inputEmail.value = "";
-      inputPassword.value = "";
-      signInClicked = false;
+
     });
   }
 
@@ -98,18 +97,19 @@
   // Listen to the authentication state
   firebase.auth().onAuthStateChanged(firebaseUser => {
     if(firebaseUser) {
-      // firebaseUser.updateProfile({displayName: username});
-      console.log(firebaseUser.displayName);
+      // firebaseUser.updateProfile({displayName: username});  
       currentUID = firebaseUser.uid;      
+      firebaseUser.updateProfile({displayName: username});
 
-      // // Check if the sign-in button was clicked. If not, it assumes the sign-up button was clicked.
-      // if(signInClicked != true){
-      //   writeUserData(currentUID, username, firebaseUser.email);
-      // } 
-
-      displayUsername(firebaseUser.displayName);
+      if (signInClicked == true) {
+        writeUserData(currentUID, firebaseUser.displayName, firebaseUser.email);
+      }else {
+        writeUserData(currentUID, username, firebaseUser.email);
+      }
+      
+      displayUsername(username);
       window.location = 'index.html';
-      console.log(firebaseUser);
+
     } else {
       console.log('not logged in');
       btnSignOut.style.display = 'none';
