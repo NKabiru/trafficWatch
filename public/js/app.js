@@ -94,6 +94,7 @@
 
   var currentUID;
 
+
   // Listen to the authentication state
   firebase.auth().onAuthStateChanged(firebaseUser => {
     if(firebaseUser) {

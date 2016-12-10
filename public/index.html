@@ -4,6 +4,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/materialize.css">
 <link rel="stylesheet" type="text/css" href="css/styles.css">
+<link rel="icon" type="image/png" href="images/favicon.png">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -52,37 +53,23 @@
 	<!-- Map space -->	
 		<div class="map-container">
 			<div id="map"></div>
-			<ul id="directions-slide" class="side-nav">
-				<li><div class="directions-panel"></div></li>
-			</ul>
 		</div>
 		
+		<!-- Directions displayed in modal box -->
+		<div id="directions-modal" class="modal">
+			<div class="modal-content">
+				<div id="directions-panel"></div>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect waves-cyan btn-flat">Close</a>
+			</div>
+		</div>
 	
 	<div id="show-directions-control">
-		<a id="btnDirections" class="btn-floating btn-large waves-effect waves-light white" data-activates="directions-slide">
+		<a id="btnDirections" class="btn-floating waves-effect waves-light white" href="#directions-modal">
 			<i class="material-icons md-dark">directions</i>
 		</a>	
 	</div>	
-	<!-- Align directions with other panels -->
-<!-- 	<div>
-		<div class="row">
-			<div class="col s6">
-				<div class="card large">
-					<div class="card-title cyan-text center-align">Text Directions</div>
-					<div id="directions-panel"></div>
-				</div>
-			</div>
-			<div class="col s6">
-				<div class="card large">
-					<div class="card-title cyan-text center-align">Roads to Avoid</div>
-					<div class="card-content" id="roads">
-						
-						
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> -->
 		
 
 

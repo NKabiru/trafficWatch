@@ -10,6 +10,7 @@ var config = {
 
 // Add side-nav to mobile screens
  $(".button-collapse").sideNav();
+ $('#directions-modal').modal();
 
 // Get elements
 var btnClearMarkers = document.getElementById('btnClearMarkers');
@@ -149,8 +150,8 @@ function firebaseOperation (map){
 			if (childData.roadState == 'clear') {
 				return;
 
-				}else if ((childData.timestamp + 3600000) >= date) {
-					console.log((childData.timestamp + 3600000) < date);
+				}else {
+					
 					var marker = new google.maps.Marker({
 						map: map,
 						animation: google.maps.Animation.DROP,

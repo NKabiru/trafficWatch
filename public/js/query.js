@@ -1,11 +1,4 @@
-// var config = {
-// 	apiKey: "AIzaSyAd-sKH5USIlYL7-GWzP7g8EPMyE3PF17o",
-// 	authDomain: "trafficwebapp.firebaseapp.com",
-// 	databaseURL: "https://trafficwebapp.firebaseio.com",
-// 	storageBucket: "trafficwebapp.appspot.com",
-// 	messagingSenderId: "563780534539"
-// };
-// firebase.initializeApp(config);
+
 
 // Get elements
 var accountUsername = document.getElementById('account-username');

@@ -30,7 +30,8 @@
 
 #destination-input {
 	background-color: #fff;
-	height: 30px;
+	height: 4vh;
+	width: 30vw;
 	z-index: 5;
 }
 

@@ -102,6 +102,7 @@
     if (firebaseUser) {
       displayUsername(firebaseUser.displayName);
       user = firebaseUser;
+      btnShowForm.className = 'waves-effect waves-light btn-flat cyan-text';
     } else {
       mobileBtnSignOut.style.display = 'none';
       mobileAccountUsername.style.display = 'none';
@@ -111,7 +112,7 @@
   });
   
   // Sync changes
-  firebase.database().ref('alerts').startAt().limitToFirst(15).on('child_added', snap => {
+  firebase.database().ref('alerts').startAt().limitToFirst(10).on('child_added', snap => {
 
     var alertObject = snap.val();
 
@@ -120,18 +121,6 @@
     var date = new Date(alertObject.timestamp);
     var prettyTimestamp = ("0" + date.getDate()).slice(-2) + "/" + ("0"+(date.getMonth()+1)).slice(-2) + "/" +
     date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
-
-
-    // <div class="card-panel">
-    //   <div class="card-content">
-    //     <div class="cyan-text">Card Title<span class="right">Status</span></div>
-
-    //     <div>Lorem ipsum</div>
-
-    //     <div><span class="right">Author &emsp; 12.34pm</span></div>
-    //   </div>
-    // </div>
-
 
     var html = 
     '<div class="card-panel" id="alert-'+ snap.key +'">'+
@@ -142,7 +131,6 @@
     '</div>'+
     '</div>';
   	
-    // TODO: Fix presentation of alerts
   	divAlertContainer.insertAdjacentHTML('beforeend', html);
 
   });
