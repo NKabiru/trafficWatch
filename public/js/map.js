@@ -48,10 +48,8 @@ var icon = {
 	}
 };
 var markers = {};
-// console.log(icon);
 
-
-
+// Create map
 function initMap()
 {
 	var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -64,8 +62,7 @@ function initMap()
 		mapTypeControl:false
 	});
 
-	// divDirectionsSelector.style.opacity = 0;
-	// TODO: Add checkbox control to map to observe various layers
+	// Set position of controls on the map
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(divLayerSelector);
 	map.controls[google.maps.ControlPosition.TOP_CENTER].push(divDirectionsSelector);
 	map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(divDirectionsButton);
@@ -78,31 +75,29 @@ function initMap()
 				lng: position.coords.longitude
 			};
 		map.setCenter(pos);
-		console.log(pos);
+		var userMarker = new google.maps.Marker({
+			position: pos,
+			map: map,
+			icon: iconBase + '/images/userMarker.png'
+		});
+
 		}, e => console.log("Position unavailable."), {enableHighAccuracy: true});
 
-	}
-
-	// Bind routing layer to checkbox
-	
-		
-	
+	}	
+			
 	navigator.geolocation.getCurrentPosition(function(position){
 		var pos = {
 			lat: position.coords.latitude,
 			lng: position.coords.longitude
 		};
-		
-		// Make destination input visible
-		
 
 		// Listen for selected destination & determine route
 		destinationAutocomplete.addListener('place_changed', function(){
 			var place = destinationAutocomplete.getPlace();
 			calculateAndDisplayRoute(directionsService, directionsDisplay, pos, place.place_id);
 		});
-
 	});
+
 		directionsDisplay.setMap(map);
 
 		btnShowDirections.addEventListener('click', () => {
@@ -110,34 +105,32 @@ function initMap()
 			directionsDisplay.setPanel(divTextDirections);
 		});
 		
-			// // When unchecked, removes route, directions & textBox
-			// inputDestination.style.visibility = 'hidden';
-			// // divDirectionsSelector.style.opacity = 0;
-			// directionsDisplay.setMap(null);
-			// directionsDisplay.setPanel(null);
-		
-	
+
+	// Set traffic layer 
+	trafficLayer = new google.maps.TrafficLayer();
+	setInterval(trafficLayer.setMap(map), 600000);
 
 	// Bind traffic layer display to checkbox
 	checkboxTraffic.addEventListener('change', function(){
 	if (checkboxTraffic.checked) {
 		// Generate traffic layer which refreshes every 10 min
-		trafficLayer = new google.maps.TrafficLayer();
-		setInterval(trafficLayer.setMap(map), 600000);
-		} else {
-			trafficLayer.setMap(null);
+		trafficLayer.setMap(null);
+		} else {	
+			trafficLayer = new google.maps.TrafficLayer();
+			setInterval(trafficLayer.setMap(map), 600000);
 		}
 	});
 
 	// Generating marker based on traffic alert
-	setInterval(firebaseOperation(map), 3600000);
+	firebaseOperation(map);
 		
 }
 
 
-
 // Call the marker data from firebase
 function firebaseOperation (map){
+	var infowindow = new google.maps.InfoWindow();
+
 	firebase.database().ref('markers').on('value', snap =>{
 
 		// Loop over each marker
@@ -145,6 +138,14 @@ function firebaseOperation (map){
 			var childKey = childSnap.key;
 			var childData = childSnap.val();
 			var date = +new Date();
+
+			var contentString  =
+			'<div id="marker content">'+
+			'<div>'+
+			'<h6>' + childData.roadName + '</h6>'+
+			'<p>' + childData.roadDetails + '</p>'+
+			'</div>'+
+			'</div>';
 
 			// TODO: make marker persist for only 1 hour after creation
 			if (childData.roadState == 'clear') {
@@ -156,21 +157,22 @@ function firebaseOperation (map){
 						map: map,
 						animation: google.maps.Animation.DROP,
 						position: childData.position,
-						icon: icon[childData.roadState].icon,
-						title: childData.roadState
+						icon: icon[childData.roadState].icon
 					});
 
+					marker.addListener('click', () => {
+						infowindow.setContent(contentString);
+						infowindow.open(map, marker);
+					});
+
+					// TODO: Find what is causing this to bug out. ANS: create marker array and eliminate
 					// setTimeout(() => {
 					// 	marker.setMap(null);
 					// 	delete marker;
-					// }, 3600000);
+					// }, 500);
 				}	
-
 		});
-
-
 	});
-
 }
 
 function calculateAndDisplayRoute(directionsService, directionsDisplay , position, place){

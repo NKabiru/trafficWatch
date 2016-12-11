@@ -8,6 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="js/jquery-3.1.1.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
 <script>
@@ -27,7 +28,7 @@ firebase.initializeApp(config);
 <!-- Navigation bar -->
 <nav>
 	<div id="navigation-bar" class="nav-wrapper cyan">
-		<a href="#" class="brand-logo">Traffic App</a>
+		<a href="index.html" class="brand-logo">Traffic App</a>
 		<a href="#" data-activates="sidebar-index" class="button-collapse"><i class="material-icons">menu</i></a>	
 			
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -39,11 +40,121 @@ firebase.initializeApp(config);
 			<li id="mobile-account-username" class="cyan-text">Account:&nbsp;</li>
 			<li><button class="waves-effect waves-light btn-flat cyan-text" id="mobile-btnSignOut">Sign Out</button></li>
 			<li><div class="divider"></div></li>
-			<li><a href="alerts.html">Traffic Alerts</a></li>	
+			<li><a href="alerts.html"><i class="material-icons">message</i>Traffic Alerts</a></li>
+			<li><a href="index.html"><i class="material-icons">home</i>Home</a></li>	
 		</ul>		
 	</div>
 	</nav>
+<!-- Body  -->
+<div class="container">
 
+	<div class="row">
+		<!-- Card -->
+		<div class="col s12 m6 l6">
+			<div class="card cyan lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Accidents</span>
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s12 m6 l6">
+			<div class="card red lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Roads congestion</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s12 m6 l6">
+			<div class="card indigo lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Departure times</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s12 m6 l6">
+			<div class="card green lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">No incidences</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s12 m6 l6">
+			<div class="card blue lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Nearest Police</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- Second row -->
+	<div class="row">
+		<!-- Card -->
+		<div class="col s6 m6 l3">
+			<div class="card yellow lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Title</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s6 m6 l3">
+			<div class="card grey lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Title</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Card -->
+		<div class="col s6 m6 l3">
+			<div class="card teal lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Title</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="col s6 m6 l3">
+			<div class="card orange lighten-1">
+				<div class="card-content white-text">
+					<span class="card-title">Title</span>
+					<!-- <canvas id="myChart"></canvas> -->
+					<p>Sample text</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+</div>
 
 
 <script type="text/javascript">
@@ -52,6 +163,7 @@ firebase.initializeApp(config);
 	});
 	 	
 </script>
+<script src="js/materialize.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/query.js"></script>
 </body>
