@@ -48,6 +48,7 @@
 #directions-selector {
 	margin-top: 0.5vh;
 	width: 45vw;
+	min-width: 150px;
 	z-index: 5;
 }
 

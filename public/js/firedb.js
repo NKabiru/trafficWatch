@@ -104,6 +104,7 @@
       user = firebaseUser;
       btnShowForm.className = 'waves-effect waves-light btn-flat cyan-text';
     } else {
+      Materialize.toast("Please login or register to view alerts", 3000, 'rounded');
       mobileBtnSignOut.style.display = 'none';
       mobileAccountUsername.style.display = 'none';
       btnSignOut.style.display = 'none';
@@ -137,6 +138,7 @@
 
   btnShowForm.addEventListener('click', () => {
     sectionAlertForm.style.display = 'block';
+
   });
 
   // If close icon clicked, set display to none.

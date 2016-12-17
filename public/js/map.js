@@ -9,7 +9,9 @@ var config = {
   firebase.initializeApp(config);
 
 // Add side-nav to mobile screens
- $(".button-collapse").sideNav();
+ $(".button-collapse").sideNav({
+ 	menuWidth: 240
+ });
  $('#directions-modal').modal();
 
 // Get elements
@@ -48,6 +50,11 @@ var icon = {
 	}
 };
 var markers = {};
+
+// Capitalize the first Letter
+String.prototype.capitalize = function() {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+}
 
 // Create map
 function initMap()
@@ -101,7 +108,6 @@ function initMap()
 		directionsDisplay.setMap(map);
 
 		btnShowDirections.addEventListener('click', () => {
-			$('#btnDirections').sideNav('show');
 			directionsDisplay.setPanel(divTextDirections);
 		});
 		
@@ -143,6 +149,7 @@ function firebaseOperation (map){
 			'<div id="marker content">'+
 			'<div>'+
 			'<h6>' + childData.roadName + '</h6>'+
+			'<em>['+ childData.roadState.capitalize() + ']</em>'+
 			'<p>' + childData.roadDetails + '</p>'+
 			'</div>'+
 			'</div>';
@@ -165,17 +172,24 @@ function firebaseOperation (map){
 						infowindow.open(map, marker);
 					});
 
-					// TODO: Find what is causing this to bug out. ANS: create marker array and eliminate
-					// setTimeout(() => {
-					// 	marker.setMap(null);
-					// 	delete marker;
-					// }, 500);
+					// Remove marker if it is older than 1 hour
+					if (childData.timestamp <= (Date.now() - 3600000)) {
+						marker.setMap(null);
+					}
 				}	
 		});
 	});
+
+
+	// Delete marker if it is older than 1 hour
+	// var cutoff = Date.now() - 3600000;
+
+	// firebase.database().ref('markers').orderByChild('timestamp').endAt(cutoff).limitToLast(1).on('child_added', snap => {
+	// 	snap.ref.remove();
+	// });
 }
 
-function calculateAndDisplayRoute(directionsService, directionsDisplay , position, place){
+function calculateAndDisplayRoute(directionsService, directionsDisplay, position, place){
 	// Test value: {lat:-1.284863, lng: 36.825575}
 		directionsService.route({
 			origin: position,
